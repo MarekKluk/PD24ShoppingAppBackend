@@ -4,8 +4,8 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import RegisterDto from './dto/register.dto';
-import { TokenPayload } from './tokenPayload.interface';
-import PostgresErrorCode from '../database/postgresErrorCodes.enum';
+import { TokenPayload } from './token-payload.interface';
+import PostgresErrorCode from '../database/postgres-error-codes.enum';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,7 +28,7 @@ export class AuthenticationService {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new HttpException(
           'User with that email already exists',
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.CONFLICT,
         );
       }
       throw new HttpException(
@@ -37,6 +37,7 @@ export class AuthenticationService {
       );
     }
   }
+
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     try {
       const user = await this.usersService.getByEmail(email);
@@ -67,15 +68,40 @@ export class AuthenticationService {
     }
   }
 
-  public getCookieWithJwtToken(userId: number) {
+  public getCookieForLogOut() {
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+    ];
+  }
+
+  public createCookieWithJwtAccessToken(userId: number) {
     const payload: TokenPayload = { userId };
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+      )}s`,
+    });
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME',
+      'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
     )}`;
   }
 
-  public getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+  public createCookieWithJwtRefreshToken(userId: number) {
+    const payload: TokenPayload = { userId };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+      )}s`,
+    });
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+    )}`;
+    return {
+      cookie,
+      token,
+    };
   }
 }

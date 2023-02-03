@@ -1,11 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateProductDto {
+export class CreateCartDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  priceInDollars: string;
 }

@@ -1,5 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Transform } from 'class-transformer';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { IsOptional } from 'class-validator';
+import PublicFile from '../files/public-file.entity';
+
+export enum productsCategory {
+  MEAT = 'MEAT',
+  DAIRY = 'DAIRY',
+  ALCOHOL = 'ALCOHOL',
+}
 
 @Entity('product')
 class Product {
@@ -9,16 +23,26 @@ class Product {
   @Column()
   public name: string;
 
-  @Column()
-  public priceInDollars: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  public priceInDollars: number;
 
-  @Column({ nullable: true })
-  @Transform(({ value }) => {
-    if (value !== null) {
-      return value;
-    }
+  @Column({
+    type: 'enum',
+    enum: productsCategory,
+    nullable: true,
   })
-  public category?: string;
+  @IsOptional()
+  public category?: productsCategory;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true,
+  })
+  public image?: PublicFile;
 }
 
 export default Product;

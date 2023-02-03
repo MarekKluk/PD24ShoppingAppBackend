@@ -6,13 +6,15 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import ProductsService from './productsService';
-import { CreateProductDto } from './dto/createProduct.dto';
-import { UpdateProductDto } from './dto/updateProduct.dto';
-import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
-import { FindOneParams } from '../utils/findOneParams';
+import ProductsService from './products.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { FindOneParams } from '../shared/types/find-one-params';
+import { FileInterceptor } from '@nestjs/platform-express';
+import 'multer';
 
 @Controller('products')
 export default class ProductsController {
@@ -29,7 +31,6 @@ export default class ProductsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthenticationGuard)
   async createProduct(@Body() product: CreateProductDto) {
     return this.productsService.createProduct(product);
   }
@@ -45,5 +46,22 @@ export default class ProductsController {
   @Delete(':id')
   async deleteProduct(@Param('id') id: string) {
     return this.productsService.deleteProduct(Number(id));
+  }
+
+  @Post('image')
+  @UseInterceptors(FileInterceptor('file'))
+  async addImage(
+    @Body() productId: { productId: number },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.productsService.addProductImage(
+      productId.productId,
+      file.buffer,
+      file.originalname,
+    );
+  }
+  @Delete('image')
+  async deleteImage(productId: number) {
+    return this.productsService.deleteProductImage(productId);
   }
 }
