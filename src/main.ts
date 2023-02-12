@@ -8,9 +8,7 @@ import { config } from 'aws-sdk';
 
 async function bootstrap() {
 
-    const app = await NestFactory.create(AppModule, {
-        bufferLogs: true
-    });
+    const app = await NestFactory.create(AppModule);
     const reflector = app.get(Reflector);
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalGuards(new JwtAuthenticationGuard(reflector));
@@ -23,29 +21,6 @@ async function bootstrap() {
         secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
         region: configService.get('AWS_REGION'),
     });
-    const winston = require('winston')
-    const CloudWatchTransport = require('winston-aws-cloudwatch')
-    const logger = winston.createLogger({
-        transports: [
-            new CloudWatchTransport({
-                logGroupName: 'nest-logs',
-                logStreamName: 'nest-logs-stream',
-                createLogGroup: true,
-                createLogStream: true,
-                submissionInterval: 2000,
-                submissionRetryCount: 1,
-                batchSize: 20,
-                awsConfig: {
-                    accessKeyId: configService.get('AWS_USER_KEY'),
-                    secretAccessKey: configService.get('AWS_USER_SECRET'),
-                    region: 'us-east-1'
-                }
-            })
-        ]
-    })
-    logger.info('Hello, CloudWatch!');
-    logger.error('An error occurred!');
-    app.useLogger(logger);
     await app.listen(3000);
 }
 bootstrap();
