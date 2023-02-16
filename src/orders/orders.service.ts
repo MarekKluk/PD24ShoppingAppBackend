@@ -4,7 +4,6 @@ import { Order } from './order.entity';
 import { Between, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import UserEntity from "../users/user.entity";
-import User from "../users/user.entity";
 
 @Injectable()
 export default class OrdersService {
@@ -62,5 +61,18 @@ export default class OrdersService {
         createdDate: Between(startDate, endDate),
       },
     });
+  }
+
+  async getOrderById(orderId: number, userId: number) {
+    return this.ordersRepository.findOne({
+      where: {
+        id: orderId,
+        cart: {
+          owner: {
+            id: userId
+          }
+        }
+      }
+    })
   }
 }

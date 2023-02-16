@@ -38,6 +38,3 @@ export default class CartsController {
     return this.cartsService.emptyActiveCart(request.user);
   }
 }
-
-//TODO:
-// 21. createdUser.password = undefined, delete password from user response, delete specific data while returning

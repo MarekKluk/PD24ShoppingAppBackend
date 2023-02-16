@@ -43,6 +43,7 @@ async function bootstrap() {
     })
     logger.info('Hello, CloudWatch!');
     logger.error('An error occurred!');
+    app.useLogger(logger);
     await app.listen(3000);
 }
 bootstrap();
