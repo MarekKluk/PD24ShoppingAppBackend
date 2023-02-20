@@ -8,7 +8,7 @@ import ProductsService from '../products/products.service';
 import OrdersService from '../orders/orders.service';
 import CartsProductsService from '../carts-products/carts-products.service';
 import { transactionStatus } from '../orders/order.entity';
-import UserEntity from "../users/user.entity";
+import UserEntity from '../users/user.entity';
 
 @Injectable()
 export default class CartsService {
@@ -65,6 +65,10 @@ export default class CartsService {
         owner: {
           id: true,
           name: true,
+        },
+        cartProduct: {
+          productId: true,
+          numberOfProducts: true,
         },
       },
     });

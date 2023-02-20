@@ -8,6 +8,7 @@ import { ExceptionsLoggerFilter } from './shared/utils/exceptions-logger.filter'
 import { APP_FILTER } from '@nestjs/core';
 import { CartsModule } from './carts/carts.module';
 import { UsersModule } from './users/users.module';
+import { ReceiptsModule } from './receipts/receipts.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UsersModule } from './users/users.module';
     ProductsModule,
     CartsModule,
     UsersModule,
+    ReceiptsModule,
   ],
   controllers: [],
   providers: [

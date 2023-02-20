@@ -20,7 +20,6 @@ export default class CartsController {
   @Post('products')
   addProductsToCart(
     @Req() request: RequestWithUser,
-    @Body() productsIdsArray: number[],
   ) {
     return this.cartsService.addProductsToCart(
       request.user,
