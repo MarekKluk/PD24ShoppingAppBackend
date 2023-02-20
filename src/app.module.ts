@@ -9,6 +9,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { CartsModule } from './carts/carts.module';
 import { UsersModule } from './users/users.module';
 import { ReceiptsModule } from './receipts/receipts.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ReceiptsModule } from './receipts/receipts.module';
     CartsModule,
     UsersModule,
     ReceiptsModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [

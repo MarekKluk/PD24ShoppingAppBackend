@@ -41,7 +41,7 @@ export default class ReceiptsService {
     const files = await fs.promises.readdir(path);
 
     for (const file of files) {
-      const filePath = `${path}${file}`;
+      const filePath = `${path}/${file}`;
       const fileContent = await fs.promises.readFile(filePath, 'utf8');
       if (fileContent.includes(stringToSearch)) {
         return filePath;

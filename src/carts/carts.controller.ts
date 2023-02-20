@@ -18,9 +18,7 @@ export default class CartsController {
   }
 
   @Post('products')
-  addProductsToCart(
-    @Req() request: RequestWithUser,
-  ) {
+  addProductsToCart(@Req() request: RequestWithUser) {
     return this.cartsService.addProductsToCart(
       request.user,
       request.body.productsIds,

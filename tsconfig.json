@@ -13,7 +13,7 @@
     "alwaysStrict": true,
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "exclude": ["node_modules", "dist"],
 }
