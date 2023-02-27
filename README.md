@@ -24,7 +24,11 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<p>
+Backend for a web shop with user registration and authentication, allowing users to add products to their cart, make an order, and print a receipt. 
+The application is built with Nest.js and TypeScript, tested with Jest, and ran on a Docker container with PostgreSQL. 
+Additionally, the application was deployed on an AWS EC2 instance, to get familiar with this environment. 
+</p>
 
 ## Installation
 
@@ -35,14 +39,9 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
-$ npm run start
+# building and running app on docker container
+$ npm docker-compose up --build
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
@@ -51,11 +50,6 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Support
