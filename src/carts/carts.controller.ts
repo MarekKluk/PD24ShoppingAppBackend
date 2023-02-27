@@ -18,10 +18,7 @@ export default class CartsController {
   }
 
   @Post('products')
-  addProductsToCart(
-    @Req() request: RequestWithUser,
-    @Body() productsIdsArray: number[],
-  ) {
+  addProductsToCart(@Req() request: RequestWithUser) {
     return this.cartsService.addProductsToCart(
       request.user,
       request.body.productsIds,
@@ -38,6 +35,3 @@ export default class CartsController {
     return this.cartsService.emptyActiveCart(request.user);
   }
 }
-
-//TODO:
-// 21. createdUser.password = undefined, delete password from user response, delete specific data while returning

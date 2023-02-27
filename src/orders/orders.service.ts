@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './order.entity';
 import { Between, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
-import UserEntity from "../users/user.entity";
-import User from "../users/user.entity";
+import UserEntity from '../users/user.entity';
 
 @Injectable()
 export default class OrdersService {
@@ -22,7 +21,7 @@ export default class OrdersService {
     return this.ordersRepository.find({
       where: {
         cart: {
-          owner: user
+          owner: user,
         },
       },
       select: {
@@ -44,22 +43,53 @@ export default class OrdersService {
       where: {
         cart: {
           owner: {
-            id: userId
-          }
+            id: userId,
+          },
         },
       },
     });
   }
 
-  async getAllUsersOrdersBetweenDates(userId: number, startDate: Date, endDate: Date) {
+  async getAllUsersOrdersBetweenDates(
+    userId: number,
+    startDate: Date,
+    endDate: Date,
+  ) {
     return this.ordersRepository.find({
       where: {
         cart: {
           owner: {
-            id: userId
-          }
+            id: userId,
+          },
         },
         createdDate: Between(startDate, endDate),
+      },
+    });
+  }
+
+  async getOrderById(orderId: number, userId: number) {
+    return this.ordersRepository.findOne({
+      where: {
+        id: orderId,
+        cart: {
+          owner: {
+            id: userId,
+          },
+        },
+      },
+      relations: [
+        'cart',
+        'cart.cartProduct',
+        'cart.cartProduct.product',
+        'cart.owner',
+      ],
+      select: {
+        cart: {
+          owner: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
   }
